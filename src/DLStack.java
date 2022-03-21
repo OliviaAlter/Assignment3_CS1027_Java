@@ -20,6 +20,7 @@ public class DLStack<T> implements DLStackADT<T> {
             top = newNode;
             newNode.setNext(null);
         }
+        numItems++;
     }
 
     @Override
@@ -27,34 +28,72 @@ public class DLStack<T> implements DLStackADT<T> {
         if (top == null) {
             throw new EmptyStackException("Stack is empty");
         } else {
-            T dataItem = top.getElement();
-            top = top.getPrevious();
-            
+            T itemPopped = top.getElement();
+            if (top.getPrevious() == null) {
+                top = null;
+            } else {
+                top = top.getPrevious();
+                top.setNext(null);
+            }
+            numItems--;
+            return itemPopped;
         }
     }
 
     @Override
     public T peek() {
-        return null;
+        if (numItems == 0) {
+            return null;
+        }
+        return top.getElement();
     }
 
     @Override
     public T pop(int k) throws InvalidItemException {
-        return null;
+        T itemPopped;
+        if (k > numItems || k <= 0) {
+            throw new InvalidItemException("Invalid item");
+        } else if (k == 1) {
+            itemPopped = pop();
+        } else {
+            DoubleLinkedNode<T> current = top;
+            for (int i = 1; i < k; i++) {
+                current = current.getPrevious();
+            }
+            itemPopped = current.getPrevious().getElement();
+            if (current.getPrevious().getPrevious() == null) {
+                current.setPrevious(current.getPrevious().getPrevious());
+                current.getPrevious().getPrevious().setNext(current);
+            } else {
+                current.setPrevious(null);
+            }
+        }
+        numItems--;
+        return itemPopped;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return numItems == 0;
     }
 
     @Override
     public int size() {
-        return 0;
+        return numItems;
     }
 
     @Override
     public DoubleLinkedNode<T> getTop() {
-        return null;
+        return top;
+    }
+
+    public String toString() {
+        String out = "[]";
+        DoubleLinkedNode<T> current = top;
+        for (int i = 1; i <= numItems; i++) {
+            out = "[" + current.getElement() + "]";
+            current = current.getNext();
+        }
+        return out;
     }
 }
