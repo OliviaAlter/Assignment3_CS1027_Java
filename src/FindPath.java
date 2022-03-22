@@ -7,7 +7,7 @@ public class FindPath {
     // Constructor
     public FindPath(String fileName) {
         try {
-            Map map = new Map(fileName);
+            pyramidMap = new Map(fileName);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
