@@ -1,8 +1,16 @@
+import java.io.FileInputStream;
+
 public class FindPath {
 
-    Map piramidMap;
+    Map pyramidMap;
 
+    // Constructor
     public FindPath(String fileName) {
+        try {
+            Map map = new Map(fileName);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
 
     }
 
@@ -11,7 +19,7 @@ public class FindPath {
     }
 
     public Map getMap() {
-
+        return pyramidMap;
     }
 
     public boolean isDim(Chamber currentChamber) {
