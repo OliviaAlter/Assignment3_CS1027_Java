@@ -62,9 +62,9 @@ public class DLStack<T> implements DLStackADT<T> {
      * @author Anos176 a.k.a. Anh Duc Vu
      */
     @Override
-    public T peek() {
+    public T peek() throws EmptyStackException {
         if (numItems == 0) {
-            return null;
+            throw new EmptyStackException("Stack is empty");
         }
         return top.getElement();
     }
@@ -85,13 +85,13 @@ public class DLStack<T> implements DLStackADT<T> {
             itemPopped = pop(); // Calls the pop method if the index is 1
         } else {
             DoubleLinkedNode<T> current = top; // Creates a new node to store the top of the stack
-            for (int i = 1; i < k; i++) { // Loops through the stack to find the node at the specified index
+            for (int i = 1; i < k - 1; i++) { // Loops through the stack to find the node at the specified index
                 current = current.getPrevious(); // Sets the current node to the previous node of the current node
             }
             itemPopped = current.getPrevious().getElement(); // Stores the element of the node before the node at the specified index
-            if (current.getPrevious().getPrevious() == null) { // Checks if the node before the node at the specified index is null
-                current.setPrevious(current.getPrevious().getPrevious()); // Sets the pointer of the current node to the node before the node at the specified index
+            if (current.getPrevious().getPrevious() != null) { // Checks if the node before the node at the specified index is null
                 current.getPrevious().getPrevious().setNext(current); // Sets the pointer of the node before the node at the specified index to the current node
+                current.setPrevious(current.getPrevious().getPrevious()); // Sets the pointer of the current node to the node before the node at the specified index
             } else {
                 current.setPrevious(null); // Sets the pointer of the current node to null if the node before the node at the specified index is null
             }
@@ -130,17 +130,22 @@ public class DLStack<T> implements DLStackADT<T> {
     }
 
     /**
-     * Prints the stack with the right format.
+     * Returns a string of the form “[data1 data2 … datan]”, where data1 is the
+     * data item at the top of the stack, and datan is the data item at the bottom of the stack.
      * @return the string representation of the stack
      * @author Anos176 a.k.a. Anh Duc Vu
      */
     public String toString() {
-        String out = "[]";
+        String result = "[";
         DoubleLinkedNode<T> current = top;
-        for (int i = 1; i <= numItems; i++) {
-            out = "[" + current.getElement() + "]";
-            current = current.getNext();
+        while (current != null) {
+            result += current.getElement();
+            current = current.getPrevious();
+            if (current != null) {
+                result += " ";
+            }
         }
-        return out;
+        result += "]";
+        return result;
     }
 }

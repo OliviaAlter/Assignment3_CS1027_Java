@@ -17,11 +17,40 @@ public class FindPath {
         }
     }
 
+    /**
+     * Find the path from the start chamber to treasure chamber
+     * @return the path from the start chamber to treasure chamber
+     * @author Anos176 a.k.a. Anh Duc Vu
+     */
     public DLStack<Chamber> path() {
         DLStack<Chamber> path = new DLStack<>();
         Chamber start = pyramidMap.getEntrance();
         int treasureTotal = pyramidMap.getNumTreasures();
-        
+        int treasureFound = 0;
+
+        path.push(start);
+        start.markPushed();
+
+        while (!path.isEmpty()) {
+            Chamber currentChamber = path.peek();
+            if (currentChamber.isTreasure()) {
+                treasureFound++;
+                if (treasureFound == treasureTotal) {
+                    return path;
+                }
+            } else {
+                Chamber c = bestChamber(currentChamber);
+                if (c != null) {
+                    path.push(c);
+                    c.markPushed();
+                } else {
+                    path.pop();
+                    currentChamber.markPopped();
+                }
+            }
+        }
+
+        return path;
     }
 
     /**
