@@ -72,10 +72,12 @@ public class FindPath {
         boolean self = false;
         boolean neighbor = false;
         self = !currentChamber.isSealed() && !currentChamber.isLighted();
-        for (int i = 1; i <= 6; i++) {
-            neighbor = currentChamber.getNeighbour(i).isLighted();
-            if (neighbor) {
-                break;
+        for (int i = 0; i <= 5; i++) {
+            if (currentChamber.getNeighbour(i) != null) {
+                neighbor = currentChamber.getNeighbour(i).isLighted();
+                if (neighbor) {
+                    break;
+                }
             }
         }
         return self && neighbor;
@@ -89,30 +91,28 @@ public class FindPath {
      */
     public Chamber bestChamber (Chamber currentChamber) {
         boolean treasureFound = false;
-        for (int i = 1; i <= 6; i++) {
+        for (int i = 0; i <= 5; i++) {
             // Check if neighbor chamber is treasure and not marked
-            if (currentChamber.getNeighbour(i).isTreasure() && !currentChamber.getNeighbour(i).isMarked()) {
-                treasureFound = true;
-                return currentChamber.getNeighbour(i);
+            if(currentChamber.getNeighbour(i) != null) {
+                if (currentChamber.getNeighbour(i).isTreasure() && !currentChamber.getNeighbour(i).isMarked()) {
+                    treasureFound = true;
+                    return currentChamber.getNeighbour(i);
+                }
             }
         }
         if (!treasureFound) {
             // Treasure not found, check if neighbor chamber is lighted and not marked
-            for (int i = 1; i <= 6; i++) {
-                if (currentChamber.getNeighbour(i).isLighted() && !currentChamber.getNeighbour(i).isMarked()) {
-                    return currentChamber.getNeighbour(i);
-                }
-            }
-        } else {
-            // Lighted not found, check if neighbor chamber is not marked and dimmed
-            for (int i = 1; i <= 6; i++) {
-                if (isDim(currentChamber.getNeighbour(i)) && !currentChamber.getNeighbour(i).isMarked()) {
-                    return currentChamber.getNeighbour(i);
+            for (int i = 0; i <= 5; i++) {
+                if(currentChamber.getNeighbour(i) != null) {
+                    if (currentChamber.getNeighbour(i).isLighted() && !currentChamber.getNeighbour(i).isMarked()) {
+                        return currentChamber.getNeighbour(i);
+                    } else if (isDim(currentChamber.getNeighbour(i)) && !currentChamber.getNeighbour(i).isMarked()) {
+                        return currentChamber.getNeighbour(i);
+                    }
                 }
             }
         }
         return null;
     }
-
 
 }
